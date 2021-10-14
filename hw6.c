@@ -140,16 +140,16 @@ void loadtextures();
 
 // load all our textures
 void loadtextures() {
-	texture[groundtex] = LoadTexBMP("use/ground.bmp");
+	texture[groundtex] = LoadTexBMP("ground.bmp");
 	//printf("%d\n", texture[groundtex]);
-	texture[branchtex] = LoadTexBMP("use/branch.bmp");
-	texture[fencetex] = LoadTexBMP("use/fence.bmp");
-	texture[grassestex] = LoadTexBMP("use/grasses.bmp");
-	texture[leavestex] = LoadTexBMP("use/leaves.bmp");
-	texture[mainbranchtex] = LoadTexBMP("use/mainbranch.bmp");
-	texture[maintrunktex] = LoadTexBMP("use/maintrunk.bmp");
-	texture[trunktex] = LoadTexBMP("use/trunk.bmp");
-	texture[weirdleavestex] = LoadTexBMP("use/weirdleaves.bmp");
+	texture[branchtex] = LoadTexBMP("branch.bmp");
+	texture[fencetex] = LoadTexBMP("fence.bmp");
+	texture[grassestex] = LoadTexBMP("grasses.bmp");
+	texture[leavestex] = LoadTexBMP("leaves.bmp");
+	texture[mainbranchtex] = LoadTexBMP("mainbranch.bmp");
+	texture[maintrunktex] = LoadTexBMP("maintrunk.bmp");
+	texture[trunktex] = LoadTexBMP("trunk.bmp");
+	texture[weirdleavestex] = LoadTexBMP("weirdleaves.bmp");
 }
 
 // displays the scene
