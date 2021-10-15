@@ -432,6 +432,8 @@ void display() {
 	tree(first);
 	glPopMatrix();
 
+	glDisable(GL_TEXTURE_2D);
+
 	// Display keys
 	// Became too crowded turning them off
 	/*
@@ -757,6 +759,12 @@ void branch(struct point base[4], double dy, int first, double dx, double dz, in
 		//glVertex3f(newbase[i%4].x, newbase[i%4].y, newbase[i%4].z);
 	}
 	glBegin(GL_QUADS);
+
+	if(maintree) {
+		//glBindTexture(GL_TEXTURE_2D, texture[mainbranchtex]);
+	} else {
+		//glBindTexture(GL_TEXTURE_2D, texture[branchtex]);
+	}
 	
 	for(i = 0; i < 4; i++) {
 		
@@ -765,10 +773,10 @@ void branch(struct point base[4], double dy, int first, double dx, double dz, in
 		double three[] = {newbase[(i+1)%4].x, newbase[(i+1)%4].y, newbase[(i+1)%4].z};
 		doanormal(one, two, three);
 
-		glVertex3f(base[(i+1)%4].x, base[(i+1)%4].y, base[(i+1)%4].z);
-		glVertex3f(three[0], three[1], three[2]);
-		glVertex3f(two[0], two[1], two[2]);
-		glVertex3f(one[0], one[1], one[2]);
+		glTexCoord2f(0,0); glVertex3f(base[(i+1)%4].x, base[(i+1)%4].y, base[(i+1)%4].z);
+		glTexCoord2f(0,1); glVertex3f(three[0], three[1], three[2]);
+		glTexCoord2f(1,1); glVertex3f(two[0], two[1], two[2]);
+		glTexCoord2f(1,0); glVertex3f(one[0], one[1], one[2]);
 	}
 	glEnd();
 
@@ -831,10 +839,16 @@ void tree(int firstrand) {
 	Color(79, 28, 3);
 
 	float black[]  = {0.0,0.0,0.0,1.0};
-   float spec[]  = {1.0,6.0,1.0,1.0};
-   glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);
-   glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,spec);
-   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,shiny/20);
+	float spec[]  = {1.0,6.0,1.0,1.0};
+	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,spec);
+	glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,shiny/20);
+
+	if(maintree) {
+		glBindTexture(GL_TEXTURE_2D, texture[maintrunktex]);
+	} else {
+		glBindTexture(GL_TEXTURE_2D, texture[trunktex]);
+	}
 
 	int i;
 	glNormal3f(0, -1, 0);
@@ -851,12 +865,18 @@ void tree(int firstrand) {
 		double three[] = {Sin(i-60), 10, Cos(i-60)};
 		//double four[] = {Sin(i-60), 0, Cos(i-60)};
 		doanormal(three, two, one);
-		Vertexflat(i, 0);
-		Vertexflat(i, 10);
-		Vertexflat(i-60, 10);
-		Vertexflat(i-60, 0);
+		glTexCoord2f(0,0); Vertexflat(i, 0);
+		glTexCoord2f(0,1); Vertexflat(i, 10);
+		glTexCoord2f(1,1); Vertexflat(i-60, 10);
+		glTexCoord2f(1,0); Vertexflat(i-60, 0);
 	}
 	glEnd();
+
+	if(maintree) {
+		glBindTexture(GL_TEXTURE_2D, texture[mainbranchtex]);
+	} else {
+		glBindTexture(GL_TEXTURE_2D, texture[branchtex]);
+	}
 
 	// now some branches?
 	// how should I do this?
@@ -1009,6 +1029,8 @@ static void icosahedron1(float x,float y,float z,float s,float th) {
    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,white);
    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,shiny);
 
+	glBindTexture(GL_TEXTURE_2D, texture[groundtex]);	
+
    glTranslatef(x,y,z);
    glRotatef(th,1,0,0);
    glScalef(s,s,s);
@@ -1029,22 +1051,22 @@ static void icosahedron1(float x,float y,float z,float s,float th) {
 
    	if(maintree == 1) {
    		glColor3f(mainrgb[idx[i].A*3+0], mainrgb[idx[i].A*3+1], mainrgb[idx[i].A*3+2]);
-	   	glVertex3f(one[0], one[1], one[2]);
+	   	glTexCoord2f(0,0); glVertex3f(one[0], one[1], one[2]);
 
 	   	glColor3f(mainrgb[idx[i].B*3+0], mainrgb[idx[i].B*3+1], mainrgb[idx[i].B*3+2]);
-	   	glVertex3f(two[0], two[1], two[2]);
+	   	glTexCoord2f(.5,0); glVertex3f(two[0], two[1], two[2]);
 
 	   	glColor3f(mainrgb[idx[i].C*3+0], mainrgb[idx[i].C*3+1], mainrgb[idx[i].C*3+2]);
-	   	glVertex3f(three[0], three[1], three[2]);
+	   	glTexCoord2f(.25,.5); glVertex3f(three[0], three[1], three[2]);
    	} else {
    		glColor3f(rgb[idx[i].A*3+0], rgb[idx[i].A*3+1], rgb[idx[i].A*3+2]);
-	   	glVertex3f(one[0], one[1], one[2]);
+	   	glTexCoord2f(0,0); glVertex3f(one[0], one[1], one[2]);
 
 	   	glColor3f(rgb[idx[i].B*3+0], rgb[idx[i].B*3+1], rgb[idx[i].B*3+2]);
-	   	glVertex3f(two[0], two[1], two[2]);
+	   	glTexCoord2f(.5,0); glVertex3f(two[0], two[1], two[2]);
 
 	   	glColor3f(rgb[idx[i].C*3+0], rgb[idx[i].C*3+1], rgb[idx[i].C*3+2]);
-	   	glVertex3f(three[0], three[1], three[2]);
+	   	glTexCoord2f(.25,.5); glVertex3f(three[0], three[1], three[2]);
    	}
 
    	glEnd();

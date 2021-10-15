@@ -725,10 +725,12 @@ void Print(const char* format , ...) {
 
 void Vertex(double thet, double dis) {
    glNormal3d(Sin(thet)*Cos(dis), Sin(dis), Cos(thet)*Cos(dis));
+   glTexCoord2f(Sin(thet)*Cos(dis), Cos(thet)*Cos(dis));
    glVertex3f(Sin(thet)*Cos(dis), Sin(dis), Cos(thet)*Cos(dis));
 }
 
 void Vertexflat(double thet, double height) {
+   //glTexCoord2f(Sin(thet), height/5);
    glVertex3f(Sin(thet), height, Cos(thet));
 }
 
